@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Keywords" content="blog"/>
+    <meta name="Description" content="blog"/>
+    <title>Simple</title>
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+<div class="main">
+    <div class="header">
+    	<ul id="pages">
+            <li><a href="/">home</a></li>
+            <li><a href="/#/tags">tags</a></li>
+            <li><a href="/#/archive">archive</a></li>
+    	</ul>
+    </div>
+	<div class="wrap-header">
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
+	</div>
+<div id="md" style="display: none;">
+<!-- markdown -->
+   
+    
+<!-- markdown end -->
+</div>
+<div class="entry" id="main">
+<!-- content -->
+
+<!-- content end -->
+</div>
+<br>
+<br>
+    <div id="disqus_thread"></div>
+	<div class="footer">
+		<p>© Copyright 2014 by isnowfy, Designed by isnowfy</p>
+	</div>
+</div>
+<script src="main.js"></script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ["\\(", "\\)"]], processEscapes: true}});
+</script>
+<script id="content" type="text/mustache">
+    <h1>{{title}}</h1>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
+</script>
+<script id="pagesTemplate" type="text/mustache">
+    {{#pages}}
+    <li>
+        <a href="{{path}}">{{title}}</a>
+    </li>
+    {{/pages}}
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "main.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#title").html(data.name);
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
+            //path
+            var path = "今天下午和计控学院以及文学院的两个学弟学妹一起去了敬老院，最大的感受是大三了参加各种活动时都是被叫学姐的份，但是还是很想被别人照顾。学妹倒是很关照我，多次提醒我站的位置很晒，不要往那里站之类的！学妹是广东人，听说广东的电视可以收到香港的部分电视台，比如翡翠台之类的。我也想看翡翠台！！学弟声音很特别，我一直都对声音特别的人有种莫名的好感。学弟的声音让我有种应该去做主持人的感觉。        在敬老院的时候，主要是陪一位老人聊天，老人原是山东人，得了半身不遂，说话也不是很利索，但是很善良，也觉得不想给别人添麻烦，所以在别人打牌的时候也只是看着，并不参与。张爷爷好像很关心国家大事的样子，以前一直订阅了今晚报，但来到敬老院之后就看不到今晚报了，所以我们决定以后来的时候带上今晚报给他读。他一直强调要关心国家政策之类的，也懂得一些GDP方面的东西，甚至让我觉得有些敬佩。之后，我们在玩扑克，本来是要玩张爷爷说的一个叫做XX的扑克游戏的，但是中途插入另一个大爷，大爷教我们玩了一个很无聊的纸牌游戏，而且反复让我们玩，真是要哭了。。。        不过，其实印象最深的还有一点，张爷爷会说“感觉自己不中用了，现在也只是混日子等死”这样的话。之前来的时候有一位老人好像是老年痴呆吧，也会一直喊“不要活了”。上了年纪的人可能确实有很多人不能真正地为国家社会创造出GDP之类的东西，但是我觉得一方面他们的存在对这个节奏很快的社会来说是一种调节，比如繁忙的生活中看到悠闲打太极拳的老人可能会觉得自己的心也静下来了。另一方面，他们也是传达者，把自己的故事、自己的感受传达给年轻人，给年轻人很多不一样的东西。      下周由于五一放假，所以已经不来敬老院了，不过下周三还可以去爱沐教育。          换个话题，天气又开始变热了。博文写完后，练下日语翻译，然后准备去洗澡。      今天下午托咖啡馆的店员把之前欠留学生的钱还给他，本来以为这周还能见到的，结果不知为什么就没有下文了，嫌われたのですか。なぜですか。唉，虽然很伤心，不过没有办法了，希望他中文可以达到自己的期望水平。      这周学习状态都不太好，考研的日子一天天临近了，要加油呀！   明天又是周一了，周一的话最难熬的是晚上那节课，除此之外还是不错的。不知卢祯老师又会讲什么笑话给我们听呢？         加入一张照片，希望以后每次博文都可以有一张照片，由于敬老院那里好像是不能拍照的，所以没有活动照片，放一张翻译练习的照片，虽然自很丑。。不过我应该不会发自己的照片。 ";
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#content").html());
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
+            if (data.disqus_shortname.length > 0) {
+                var disqus_shortname = data.disqus_shortname;
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            }
+        }
+    });
+});
+</script>
+</body>
+</html>
